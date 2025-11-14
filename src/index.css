@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  :root {
+    --background: #f3f3f3;
+    --foreground: #1a1a1a;
+    
+    --card: #fdfdfd;
+    --card-foreground: #1a1a1a;
+ 
+    --popover: #ffffff;
+    --popover-foreground: #1a1a1a;
+ 
+    --primary: #008529;
+    --primary-foreground: #fdfdfd;
+ 
+    --secondary: #e5e7eb;
+    --secondary-foreground: #1a1a1a;
+ 
+    --muted: #e5e7eb;
+    --muted-foreground: #6b7280;
+ 
+    --accent: #e8f5e9;
+    --accent-foreground: #008529;
+ 
+    --destructive: #dc2626;
+    --destructive-foreground: #fdfdfd;
+ 
+    --border: #e5e7eb;
+    --input: #e5e7eb;
+    
+    --input-background: #fdfdfd;
+    
+    --ring: #008529;
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: #0F1A13;
+    --foreground: #E5EDE7;
+
+    --card: #18251C;
+    --card-foreground: #E5EDE7;
+
+    --popover: #18251C;
+    --popover-foreground: #E5EDE7;
+
+    --primary: #00A651;
+    --primary-foreground: #ffffff;
+
+    --secondary: #243329;
+    --secondary-foreground: #E5EDE7;
+
+    --muted: #243329;
+    --muted-foreground: #9FAFA3;
+
+    --accent: #2D3F34;
+    --accent-foreground: #00A651;
+
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+
+    --border: #2D3F34;
+
+    --input: #2D3F34;
+    
+    --input-background: #2D3F34;
+    
+    --ring: #00A651;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-input-background {
+    background-color: var(--input-background);
+  }
+}
+
+@layer components {
+  .btn-calcana {
+    @apply bg-primary text-primary-foreground hover:opacity-90 h-10 px-4 py-2 rounded-md inline-flex items-center justify-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .calcana-logo-bg {
+    @apply bg-primary;
+  }
+
+  .calcana-sidebar-active {
+    @apply bg-primary text-primary-foreground;
+    @apply hover:bg-gray-100 hover:text-primary dark:hover:bg-gray-800;
+  }
+
+  .btn-outline-themed {
+    @apply h-9 px-4 py-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors;
+    @apply text-muted-foreground border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .btn-icon-themed {
+    @apply h-9 w-9 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors;
+    @apply text-muted-foreground hover:bg-accent hover:text-accent-foreground;
+  }
+}
+
+@layer base {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px hsl(var(--input-background)) inset !important; 
+    -webkit-text-fill-color: hsl(var(--foreground)) !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  *:focus-visible {
+    outline-color: hsl(var(--primary));
+  }
+}
+
+[data-state='checked'] .trash-icon {
+  display: none;
+}
+
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); 
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 0.2s;
+  }
+  
+  .dark input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+}
