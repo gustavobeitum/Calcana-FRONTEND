@@ -81,7 +81,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
               <Input
                 id="email"
                 type="email"
-                className="text-popover-foreground bg-green-100"
+                className="text-popover-foreground dark:bg-green-100"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
@@ -95,7 +95,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  className="text-popover-foreground bg-green-100"
+                  className="text-popover-foreground dark:bg-green-100"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
