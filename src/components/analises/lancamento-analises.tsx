@@ -9,6 +9,8 @@ import { TestTube, Calculator, Save, RotateCcw, CheckCircle2 } from "lucide-reac
 import { toast } from "sonner";
 import api from "../../services/api";
 
+import { Combobox } from "../ui/combobox";
+
 interface Fornecedor {
   idFornecedor: number;
   nome: string;
@@ -58,7 +60,7 @@ export function LancamentoAnalises({ userId }: LancamentoAnalisesProps) {
   } | null>(null);
 
   useEffect(() => {
-    api.get<{ content: Fornecedor[] }>("/fornecedores?status=ativos&size=10")
+    api.get<{ content: Fornecedor[] }>("/fornecedores?status=ativos&size=999")
       .then(res => setFornecedores(res.data.content)) 
       .catch(err => toast.error("Erro ao carregar fornecedores."));
   }, []);
@@ -66,6 +68,7 @@ export function LancamentoAnalises({ userId }: LancamentoAnalisesProps) {
   useEffect(() => {
     if (!formData.fornecedor) {
       setPropriedades([]);
+      setFormData(prev => ({ ...prev, propriedade: "" }));
       return;
     }
     api.get<Propriedade[]>(`/propriedades/por-fornecedor/${formData.fornecedor}`)
@@ -155,6 +158,16 @@ export function LancamentoAnalises({ userId }: LancamentoAnalisesProps) {
 
   const hoje = new Date().toISOString().split("T")[0];
 
+  const fornecedoresOptions = fornecedores.map(f => ({
+    value: String(f.idFornecedor),
+    label: f.nome
+  }));
+
+  const propriedadesOptions = propriedades.map(p => ({
+    value: String(p.idPropriedade),
+    label: p.nome
+  }));
+
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
       <div>
@@ -175,28 +188,34 @@ export function LancamentoAnalises({ userId }: LancamentoAnalisesProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
                 <div className="space-y-2">
-                  <Label>Fornecedor *</Label>
-                  <Select value={formData.fornecedor} onValueChange={(val) => handleInputChange("fornecedor", val)}>
-                    <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                    <SelectContent>
-                      {fornecedores.map(f => <SelectItem key={f.idFornecedor} value={String(f.idFornecedor)}>{f.nome}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
+                  <Label>Fornecedor</Label>
+                  <Combobox
+                    options={fornecedoresOptions}
+                    value={formData.fornecedor}
+                    onValueChange={(val) => handleInputChange("fornecedor", val)}
+                    placeholder="Selecione o fornecedor"
+                    searchPlaceholder="Buscar fornecedor..."
+                    emptyMessage="Nenhum fornecedor encontrado."
+                  />
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Propriedade *</Label>
-                  <Select value={formData.propriedade} onValueChange={(val) => handleInputChange("propriedade", val)} disabled={!formData.fornecedor}>
-                    <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                    <SelectContent>
-                      {propriedades.map(p => <SelectItem key={p.idPropriedade} value={String(p.idPropriedade)}>{p.nome}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
+                  <Label>Propriedade</Label>
+                  <Combobox
+                    options={propriedadesOptions}
+                    value={formData.propriedade}
+                    onValueChange={(val) => handleInputChange("propriedade", val)}
+                    placeholder="Selecione a propriedade"
+                    searchPlaceholder="Buscar propriedade..."
+                    emptyMessage="Nenhuma propriedade encontrada."
+                    disabled={!formData.fornecedor || propriedades.length === 0}
+                  />
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Nº Amostra *</Label>
+                  <Label>Nº Amostra</Label>
                   <Input 
                     type="number"
                     value={formData.numeroAmostra} 
@@ -229,7 +248,7 @@ export function LancamentoAnalises({ userId }: LancamentoAnalisesProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Data da Análise *</Label>
+                  <Label>Data da Análise</Label>
                   <Input 
                     type="date" 
                     max={hoje}
@@ -244,15 +263,11 @@ export function LancamentoAnalises({ userId }: LancamentoAnalisesProps) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Calculator className="w-5 h-5 text-primary" />
-                  Dados Laboratoriais (Entrada)
+                  Dados Laboratoriais
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label>PBU (%) *</Label>
-                    <Input type="number" step="0.01" placeholder="0.00" value={formData.pbu} onChange={e => handleInputChange("pbu", e.target.value)} required />
-                  </div>
                   <div className="space-y-2">
                     <Label>BRIX *</Label>
                     <Input type="number" step="0.01" placeholder="0.00" value={formData.brix} onChange={e => handleInputChange("brix", e.target.value)} required />
@@ -260,6 +275,10 @@ export function LancamentoAnalises({ userId }: LancamentoAnalisesProps) {
                   <div className="space-y-2">
                     <Label>Leitura Sac. *</Label>
                     <Input type="number" step="0.01" placeholder="0.00" value={formData.leituraSacarimetrica} onChange={e => handleInputChange("leituraSacarimetrica", e.target.value)} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>PBU (%) *</Label>
+                    <Input type="number" step="0.01" placeholder="0.00" value={formData.pbu} onChange={e => handleInputChange("pbu", e.target.value)} required />
                   </div>
                 </div>
                 

@@ -126,7 +126,7 @@ export function Historico({ userRole }: HistoricoProps) {
     if (filtros.dataFim) params.append("dataFim", filtros.dataFim); 
  
     params.append("page", String(page)); 
-    params.append("size", "5"); 
+    params.append("size", "20"); 
  
     try { 
       const response = await api.get<ApiResponse<Analise>>(`/analises?${params.toString()}`); 
@@ -152,7 +152,7 @@ export function Historico({ userRole }: HistoricoProps) {
   useEffect(() => { 
     const carregarFornecedores = async () => { 
       try { 
-        const fornData = await api.get<{ content: Fornecedor[] }>("/fornecedores?status=ativos&size=20"); 
+        const fornData = await api.get<{ content: Fornecedor[] }>("/fornecedores?status=ativos&size=999"); 
         setFornecedores(fornData.data.content); 
       } catch (error: any) { 
         toast.error("Erro ao carregar fornecedores."); 
@@ -497,14 +497,14 @@ export function Historico({ userRole }: HistoricoProps) {
             <Table> 
               <TableHeader> 
                 <TableRow> 
-                  <TableHead>Data</TableHead> 
-                  <TableHead>Nº Amostra</TableHead> 
-                  <TableHead>Fornecedor</TableHead> 
-                  <TableHead>Propriedade</TableHead> 
-                  <TableHead>Talhão</TableHead> 
-                  <TableHead>ATR</TableHead> 
-                  <TableHead>Email</TableHead>
-                  <TableHead className="text-right">Ações</TableHead> 
+                  <TableHead className="text-center">Data</TableHead> 
+                  <TableHead className="text-left">Nº Amostra</TableHead> 
+                  <TableHead className="text-center"> Fornecedor</TableHead> 
+                  <TableHead className="text-center">Propriedade</TableHead> 
+                  <TableHead className="text-center">Talhão</TableHead> 
+                  <TableHead className="text-center">ATR</TableHead> 
+                  <TableHead className="text-center">Email</TableHead>
+                  <TableHead className="text-center">Ações</TableHead> 
                 </TableRow> 
               </TableHeader> 
               <TableBody> 
@@ -529,18 +529,18 @@ export function Historico({ userRole }: HistoricoProps) {
                           {new Date(analise.dataAnalise + 'T12:00:00').toLocaleDateString('pt-BR')} 
                         </div> 
                       </TableCell> 
-                      <TableCell> 
+                      <TableCell className="text-start"> 
                         <Badge variant="outline">#{analise.numeroAmostra}</Badge> 
                       </TableCell> 
                       <TableCell className="font-medium">{analise.propriedade.fornecedor.nome}</TableCell> 
                       <TableCell>{analise.propriedade.nome}</TableCell> 
-                      <TableCell>{analise.talhao}</TableCell> 
-                      <TableCell> 
+                      <TableCell className="text-center">{analise.talhao}</TableCell> 
+                      <TableCell className="text-center"> 
                         <span className={`font-bold ${getATRColor(analise.atr)}`}> 
                           {analise.atr ? analise.atr.toFixed(2) : "-"} 
                         </span> 
                       </TableCell> 
-                      <TableCell> 
+                      <TableCell className="text-center"> 
                         {analise.statusEnvioEmail ? ( 
                           <Badge variant="secondary" className="bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400 border-blue-200 dark:border-blue-800"> 
                             <Check className="w-3 h-3 mr-1" /> 
@@ -550,8 +550,8 @@ export function Historico({ userRole }: HistoricoProps) {
                           <Badge variant="outline">Pendente</Badge> 
                         )} 
                       </TableCell> 
-                      <TableCell className="text-right"> 
-                        <div className="flex justify-end gap-2"> 
+                      <TableCell> 
+                        <div className="flex justify-center gap-2"> 
  
                           {userRole === "OPERADOR" && ( 
                             <Button  

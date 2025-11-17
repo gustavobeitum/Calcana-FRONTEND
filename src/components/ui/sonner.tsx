@@ -15,15 +15,18 @@ const Toaster = ({ ...props }: ToasterProps) => {
           toast:
             "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
           
-          success: "group-[.toast]:bg-primary/5 group-[.toast]:text-primary group-[.toast]:border-primary/20",
-          error: "group-[.toast]:bg-destructive/5 group-[.toast]:text-destructive group-[.toast]:border-destructive/20",
-          warning: "group-[.toast]:bg-yellow-500/5 group-[.toast]:text-yellow-600 dark:group-[.toast]:text-yellow-400 group-[.toast]:border-yellow-500/20",
-          
           description: "group-[.toast]:text-muted-foreground",
           actionButton:
             "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton:
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+
+          success:
+            "group-[.toaster]:bg-primary/5 group-[.toaster]:text-primary group-[.toaster]:border-primary/20",
+          error:
+            "group-[.toaster]:bg-destructive/5 group-[.toaster]:text-destructive group-[.toaster]:border-destructive/20",
+          warning:
+            "group-[.toaster]:bg-yellow-500/5 group-[.toaster]:text-yellow-600 dark:group-[.toaster]:text-yellow-400 group-[.toaster]:border-yellow-500/20",
         },
       }}
       {...props}

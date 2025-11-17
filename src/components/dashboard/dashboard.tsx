@@ -75,7 +75,7 @@ export function Dashboard({ userRole }: DashboardProps) {
 
       <Card className="shadow-lg">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Análises Este Ano</CardTitle>
+          <CardTitle className="text-sm font-medium">Quantidade de Análises este Ano</CardTitle>
           <TestTube className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -90,7 +90,7 @@ export function Dashboard({ userRole }: DashboardProps) {
 
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle>Análises este Ano</CardTitle>
+          <CardTitle>Quantidade de Análises (por mês)</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[300px] w-full">
@@ -141,7 +141,7 @@ export function Dashboard({ userRole }: DashboardProps) {
 
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle>Evolução ATR Médio</CardTitle>
+          <CardTitle>Evolução ATR Médio (por mês)</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[300px] w-full">
@@ -165,6 +165,12 @@ export function Dashboard({ userRole }: DashboardProps) {
                   labelStyle={{
                     color: 'var(--muted-foreground)',
                     marginBottom: '0.25rem'
+                  }}
+                  formatter={(value: any, name: any) => {
+                    if (typeof value === 'number' && name === 'atr') {
+                      return [value.toFixed(2), name];
+                    }
+                    return [value, name];
                   }}
                 />
                 <Line 

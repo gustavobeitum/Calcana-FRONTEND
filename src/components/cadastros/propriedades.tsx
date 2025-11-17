@@ -15,6 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { cn } from "../ui/utils";
 
 import { useDebounce } from "../../hooks/useDebounce";
+import { Combobox } from "../ui/combobox";
 
 interface Cidade { idCidade: number; nome: string; uf: string; }
 interface Fornecedor { idFornecedor: number; nome: string; }
@@ -68,7 +69,7 @@ export function Propriedades({ userRole }: PropriedadesProps) {
       const propsParams = new URLSearchParams();
       propsParams.append("status", statusFilter);
       propsParams.append("page", String(page));
-      propsParams.append("size", "11");
+      propsParams.append("size", "10");
       if (search) {
         propsParams.append("search", search);
       }
@@ -234,6 +235,15 @@ export function Propriedades({ userRole }: PropriedadesProps) {
     setIsDialogOpen(true);
   };
 
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const fornecedoresOptions = fornecedores.map(f => ({
+    value: String(f.idFornecedor),
+    label: f.nome
+  }));
+
   if (loading && propriedades.length === 0) return <div className="p-6 space-y-4"><Skeleton className="h-10 w-48" /><Skeleton className="h-64 w-full" /></div>;
 
   return (
@@ -258,21 +268,25 @@ export function Propriedades({ userRole }: PropriedadesProps) {
                 <DialogDescription>Preencha os dados da propriedade rural.</DialogDescription>
               </DialogHeader>
 
-              <div className="flex-1 overflow-y-auto -mr-6 pr-6">
+              <div className="flex-1 -mr-6 pr-6">
                 <form id="propriedade-form" onSubmit={handleSubmitPropriedade} className="space-y-4 py-4">
                   <div className="space-y-2">
                     <Label htmlFor="nome">Nome da Propriedade</Label>
                     <Input id="nome" value={formData.nome} onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))} placeholder="Ex: Fazenda Boa Vista" required />
                   </div>
+                  
                   <div className="space-y-2">
                     <Label htmlFor="fornecedor">Fornecedor</Label>
-                    <Select value={formData.idFornecedor} onValueChange={(value) => setFormData(prev => ({ ...prev, idFornecedor: value }))}>
-                      <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                      <SelectContent>
-                        {fornecedores.map(f => <SelectItem key={f.idFornecedor} value={String(f.idFornecedor)}>{f.nome}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
+                      <Combobox
+                        options={fornecedoresOptions}
+                        value={formData.idFornecedor}
+                        onValueChange={(val) => handleInputChange("idFornecedor", val)}
+                        placeholder="Selecione o fornecedor"
+                        searchPlaceholder="Buscar fornecedor..."
+                        emptyMessage="Nenhum fornecedor encontrado."
+                      />
                   </div>
+                  
                   <div className="space-y-2">
                     <Label htmlFor="cidade">Cidade</Label>
                     <div className="flex gap-2">
@@ -291,17 +305,21 @@ export function Propriedades({ userRole }: PropriedadesProps) {
                           </SelectTrigger>
                           <SelectContent>
                             {cidades.map(c => (
-                              <SelectItem key={c.idCidade} value={String(c.idCidade)} textValue={`${c.nome} - ${c.uf}`} className="cursor-pointer w-full">
-                                  <div className="flex items-center w-full gap-2 pr-2">
-                                    <span className="truncate font-normal">{c.nome} - {c.uf}</span>
-                                    <div 
-                                      className="shrink-0 p-1.5 rounded-md hover:bg-red-200 text-muted-foreground hover:text-red-600 transition-colors z-50"
-                                      onPointerDown={(e) => requestDelete(e, 'cidade', c.idCidade, c.nome)}
-                                      title="Excluir cidade"
-                                    >
-                                      <Trash2 className="w-4 h-4" />
-                                    </div>
+                              <SelectItem key={c.idCidade} value={String(c.idCidade)} textValue={`${c.nome} - ${c.uf}`} className="cursor-pointer w-full pr-2">
+                                <div className="flex items-center justify-between w-full gap-2">
+                                  <span className="truncate font-normal flex-1">{c.nome} - {c.uf}</span>
+                                  <div 
+                                    className="shrink-0 p-1.5 rounded-md hover:bg-red-100 text-muted-foreground hover:text-red-600 transition-colors z-50"
+                                    onPointerDown={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      requestDelete(e, 'cidade', c.idCidade, c.nome);
+                                    }}
+                                    title="Excluir cidade"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
                                   </div>
+                                </div>
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -363,8 +381,8 @@ export function Propriedades({ userRole }: PropriedadesProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead><TableHead>Fornecedor</TableHead><TableHead>Cidade</TableHead><TableHead>Status</TableHead>
-                {isOperador && <TableHead className="text-right">Ações</TableHead>}
+                <TableHead>Nome</TableHead><TableHead>Fornecedor</TableHead><TableHead>Cidade</TableHead><TableHead className="text-center">Status</TableHead>
+                {isOperador && <TableHead className="text-center">Ações</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -384,10 +402,10 @@ export function Propriedades({ userRole }: PropriedadesProps) {
                     <TableCell className="font-medium">{prop.nome}</TableCell>
                     <TableCell><div className="flex items-center gap-2"><User className="w-4 h-4 text-muted-foreground" />{prop.fornecedor?.nome}</div></TableCell>
                     <TableCell><div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground" />{prop.cidade?.nome}/{prop.cidade?.uf}</div></TableCell>
-                    <TableCell><Badge variant={prop.ativo ? "default" : "destructive"} className={prop.ativo ? "bg-green-600 hover:bg-green-700" : ""}>{prop.ativo ? "Ativa" : "Inativa"}</Badge></TableCell>
+                    <TableCell className="text-center"><Badge variant={prop.ativo ? "default" : "destructive"} className={prop.ativo ? "bg-green-600 hover:bg-green-700" : ""}>{prop.ativo ? "Ativa" : "Inativa"}</Badge></TableCell>
                     {isOperador && (
-                      <TableCell className="text-right">
-                        <div className="flex justify-end space-x-2">
+                      <TableCell>
+                        <div className="flex justify-center space-x-2">
                           <Button 
                             variant="outline" 
                             size="sm" 

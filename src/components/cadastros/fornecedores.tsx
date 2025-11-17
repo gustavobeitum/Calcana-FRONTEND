@@ -269,8 +269,8 @@ export function Fornecedores({ userRole }: FornecedoresProps) {
                 <TableRow>
                   <TableHead>Nome</TableHead>
                   <TableHead>Contato</TableHead>
-                  <TableHead>Status</TableHead>
-                  {isOperador && <TableHead className="text-right">Ações</TableHead>}
+                  <TableHead className="text-center">Status</TableHead>
+                  {isOperador && <TableHead className="text-center">Ações</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -295,7 +295,7 @@ export function Fornecedores({ userRole }: FornecedoresProps) {
                           <span className="text-sm">{fornecedor.email}</span>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-center">
                         <Badge 
                           variant={fornecedor.ativo ? "default" : "destructive"}
                           className={fornecedor.ativo ? "bg-green-600 hover:bg-green-700" : ""}
@@ -305,7 +305,7 @@ export function Fornecedores({ userRole }: FornecedoresProps) {
                       </TableCell>
                       {isOperador && (
                         <TableCell className="text-right">
-                          <div className="flex justify-end space-x-2">
+                          <div className="flex justify-center space-x-2">
                             <Button
                               variant="outline"
                               size="sm"
