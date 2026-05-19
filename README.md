@@ -105,7 +105,7 @@ O sistema utiliza **JWT** para autenticação. O token é armazenado no `localSt
 ## 🔗 Repositório do Backend
 
 A API que alimenta este frontend está disponível em:
-👉 [calcana-api]([https://github.com/seu-usuario/calcana-api](https://github.com/gustavobeitum/Calcana-BACKEND))
+👉 [calcana-api](https://github.com/gustavobeitum/Calcana-BACKEND)
 
 ---
 
